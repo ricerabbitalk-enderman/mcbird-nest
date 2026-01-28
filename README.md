@@ -1,19 +1,36 @@
 # nest
-nest, Nest is Easy and Simple Test unit. 
 
-## Case
+**nest, Nest is Easy and Simple Test unit.**
 
-### Define
-case is a single mcfunction.
-If it returns 0, the test continues and executes every tick until another value is returned.
-If it returns 1, the test succeeds.
-If it returns -1, the test fails.
-If it returns -2, the test errors and the suite terminates.
+[English](README.md) / [日本語](README-jp.md)
 
-Within a case, you can use the score `nest.case.tick` to get the tick count since the case began.
+Helps build a simple test environment using Minecraft's test system.
 
-#### Example
-<pre>
+### Notes
+Using mcbird-js/nest.js makes building a test environment even easier.
+
+## Test Cases
+
+### Definition
+
+A test case is a single function (mcfunction).
+
+Returning 0 causes the test to continue, calling the same function again at the next tick.
+You need a branch to terminate the test, such as managing the count with a counter.
+
+Returning 1 indicates the test passed.
+
+Returning -1 indicates the test failed.
+
+-2 indicates a fatal error, discarding all subsequent test cases.
+
+Test cases execute functions using the `nest.case` entity as `@s`.
+
+The `nest.case` entity holds `nest.case.tick`, representing the number of ticks since the test started.
+
+Use this as a reference for the number of attempts.
+
+```mcfunction
 # Use nest.case.tick.
 execute if score @s nest.case.tick = ... run ...
 
@@ -30,38 +47,45 @@ execute if ... run return 1
 
 # Continue.
 return 0
-</pre>
+```
 
-## Suite
+## Test Suite
+
+A test suite is a group that combines multiple test cases into one.
+
+Since the following setup and teardown processes are executed before and after each test case within a test suite, describing common processing required for testing reduces effort.
 
 ### Setup and Teardown
-Setup and teardown are each a single mcfunction.
 
-If they return fail, the process fails; if they return 1, the process succeeds.
+Setup and teardown functions are each a single function (mcfunction).
 
-Setup runs before case execution, and teardown runs after case execution.
-They are used for case preparation and post-processing.
+Always return 1 on success and return fail if an error occurs.
 
-#### Example
-<pre>
+Omitting this will cause confusion with fail and result in everything being treated as an error.
+
+```mcfunction
 # Initialize (and Failure).
-execute unless function xxx:initialize run return fail
+execute unless function xxx:initialize run return fail...
 
-...
+
 
 # Success.
 return 1
-</pre>
+```
 
 ## Alias
 
-The `case`, `setup`, and `teardown` can be defined in any location, but function tags must be added to `data/nest/tags/function/alias/`. (Subdirectories cannot be used.)
+For test cases, construction, and deconstruction, you must define aliases corresponding to each function.
 
-These function tags are called aliases, and all test processing is executed through them.
+Aliases are function tags and should be defined in the `data/nest/tags/function/alias/` directory.
 
-#### Example
-**data/xxx/function/.../example.mcfunction** (xxx:.../example)
-<pre>
+Subdirectories are not permitted. Specify flat filenames.
+
+### `data/xxx/function/.../example.mcfunction` (`function xxx:.../example`)
+
+For example, when creating a test case like the following:
+
+```mcfunction
 # Use nest.case.tick.
 execute if score @s nest.case.tick = ... run ...
 
@@ -78,22 +102,27 @@ execute if ... run return 1
 
 # Continue.
 return 0
-</pre>
-**data/nest/tags/function/alias/case-example.json**
-<pre>
+```
+
+### `data/nest/tags/function/alias/case-example.json` (`function #nest:alias/case-sample`)
+
+Aliases are defined like this.
+
+```json
 {
-  "replace": false,
-  "values": [
-    "xxx:.../example"
+  “replace”: true,
+  “values”: [
+    “xxx:.../example”
   ]
 }
-</pre>
+```
 
-## Unit
+## Test Unit
 
-### Test
-Create unit and run test.
-<pre>
+### Test Construction
+When constructing tests, configure information in `storage nest:test/run <<` before executing `function nest:test/run`.
+
+```mcfunction
 data modify storage nest:test/run << set value { \
   unit:..., \
   data:[ \
@@ -120,10 +149,15 @@ data modify storage nest:test/run << set value { \
   ] \
 }
 function nest:test/run
-</pre>
+```
 
-unit:... and suite:... set unique strings.
+This will generate the test environment and automatically start the tests.
 
-setup:..., teardown:..., and cases:[...] set the aliases defined earlier.
+To delete it, use `/test clearthise` or similar.
 
-Once testing is complete, delete them using commands like `/test clearthese`.
+## For Easier Setup
+
+This series of steps can be quite tedious.
+
+A converter for easier setup is provided at mcbird-js/nest.js.
+Please feel free to use it.
