@@ -2,6 +2,8 @@
 
 **nest, Nest is Easy and Simple Test unit.**
 
+[English](README.md) / [日本語](README-jp.md)
+
 Minecraft のテストシステムを使った簡単なテスト環境構築を手助けします。
 
 ### メモ
