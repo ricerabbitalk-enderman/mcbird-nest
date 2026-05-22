@@ -1,9 +1,11 @@
 {
   "replace": false,
   "values": [
-    "nest:__/system/__load",
-    "nest:__/system/__define",
-    "nest:__/case/__load",
-    "nest:__/suite/__load"
+    "nest:_system/_load",
+    "nest:_system/_define",
+    "nest:_case/_load",
+    "nest:_suite/_load",
+
+    "#nest:load"
   ]
 }

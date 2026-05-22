@@ -1,6 +1,6 @@
 {
   "replace": false,
   "values": [
-    "nest:test/__tick"
+    "nest:_test/_tick"
   ]
 }

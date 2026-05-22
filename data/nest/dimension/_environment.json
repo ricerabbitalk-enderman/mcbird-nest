@@ -1,0 +1,15 @@
+{
+  "type": "nest:_environment",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "layers": [
+        {"block": "minecraft:air", "height": 1}
+      ],
+      "biome": "nest:_environment",
+      "features": false,
+      "lakes": false,
+      "structure_overrides": []
+    }
+  }
+}
